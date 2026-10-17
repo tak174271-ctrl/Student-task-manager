@@ -1,34 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Task Manager</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Task Manager</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Student Task Manager</h1>
-    <p>Manage your study tasks easily!</p>
 
-    <div class="stats">
-      <p>Total Tasks: <span id="total">0</span></p>
-      <p>Completed: <span id="completed">0</span></p>
+    <div class="container">
+        <h1>Student Task Manager</h1>
+
+        <div class="input-area">
+            <input type="text" id="taskInput" placeholder="Enter your task">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+
+        <ul id="taskList"></ul>
     </div>
 
-    <form id="taskForm">
-      <input
-        type="text"
-        id="taskInput"
-        placeholder="Enter your study task..."
-        required
-      >
-      <button type="submit">Add Task</button>
-    </form>
-
-    <ul id="taskList"></ul>
-  </div>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
