@@ -1,508 +1,421 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Student Task Manager</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Task Manager</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f1f5f9;
-      color: #1e293b;
-      margin: 0;
-      padding: 20px;
-      transition: background 0.3s, color 0.3s;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
+            margin: 0;
+            padding: 20px;
+            transition: 0.3s;
+        }
 
-    .container {
-      max-width: 600px;
-      margin: 30px auto;
-      padding: 25px;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 5px 20px #00000012;
-    }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px #00000015;
+        }
 
-    h1 {
-      text-align: center;
-      color: #2563eb;
-    }
+        h1 {
+            text-align: center;
+            color: #2563eb;
+            font-size: 27px;
+        }
 
-    .subtitle {
-      text-align: center;
-      color: #64748b;
-    }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+        }
 
-    .top-bar {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 15px;
-    }
+        .top-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 15px;
+        }
 
-    button {
-      border: none;
-      padding: 10px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-    }
+        input[type="text"] {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
 
-    .theme-btn {
-      background: #1e293b;
-      color: white;
-    }
+        button {
+            border: none;
+            border-radius: 7px;
+            padding: 10px 13px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 3px;
+        }
 
-    .task-input {
-      display: flex;
-      gap: 8px;
-      margin: 25px 0;
-    }
+        .add-btn {
+            background: #2563eb;
+            color: white;
+            width: 100%;
+            padding: 13px;
+            font-size: 16px;
+        }
 
-    input[type="text"] {
-      flex: 1;
-      min-width: 0;
-      padding: 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font-size: 16px;
-      background: white;
-      color: #1e293b;
-    }
+        .theme-btn {
+            background: #334155;
+            color: white;
+        }
 
-    .add-btn {
-      background: #2563eb;
-      color: white;
-    }
+        .progress-box {
+            margin-top: 22px;
+        }
 
-    .progress-container {
-      margin: 20px 0;
-      padding: 15px;
-      background: #eff6ff;
-      border-radius: 12px;
-    }
+        .progress-track {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
 
-    .progress-info {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
+        #progressBar {
+            height: 100%;
+            width: 0%;
+            background: #22c55e;
+            transition: width 0.3s;
+        }
 
-    .progress-bar {
-      width: 100%;
-      height: 12px;
-      background: #dbeafe;
-      border-radius: 20px;
-      overflow: hidden;
-    }
+        #taskList {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
 
-    #progressFill {
-      width: 0%;
-      height: 100%;
-      background: #22c55e;
-      border-radius: 20px;
-      transition: width 0.3s ease;
-    }
+        .task {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 9px;
+        }
 
-    #taskList {
-      list-style: none;
-      padding: 0;
-    }
+        .task input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
 
-    .task-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px;
-      margin-bottom: 10px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 10px;
-    }
+        .task-text {
+            flex: 1;
+            min-width: 100px;
+            overflow-wrap: anywhere;
+        }
 
-    .task-item span {
-      flex: 1;
-      min-width: 0;
-      overflow-wrap: anywhere;
-    }
+        .completed .task-text {
+            text-decoration: line-through;
+            color: #64748b;
+        }
 
-    .task-item.completed span {
-      text-decoration: line-through;
-      color: #64748b;
-    }
+        .edit-btn {
+            background: #f59e0b;
+            color: white;
+        }
 
-    .edit-btn {
-      background: #fef3c7;
-      color: #92400e;
-    }
+        .delete-btn {
+            background: #ef4444;
+            color: white;
+        }
 
-    .delete-btn {
-      background: #fee2e2;
-      color: #b91c1c;
-    }
+        #message {
+            text-align: center;
+            color: #64748b;
+            margin-top: 20px;
+        }
 
-    .empty-message {
-      text-align: center;
-      color: #64748b;
-      padding: 15px 0;
-    }
+        body.dark {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
 
-    .footer {
-      text-align: center;
-      color: #64748b;
-      font-size: 12px;
-      margin-top: 25px;
-    }
+        body.dark .container {
+            background: #1e293b;
+        }
 
-    body.dark-mode {
-      background: #0f172a;
-      color: #f1f5f9;
-    }
+        body.dark .task {
+            background: #334155;
+            border-color: #475569;
+        }
 
-    body.dark-mode .container {
-      background: #1e293b;
-    }
+        body.dark input[type="text"] {
+            background: #334155;
+            color: white;
+            border-color: #64748b;
+        }
 
-    body.dark-mode h1 {
-      color: #60a5fa;
-    }
+        body.dark .subtitle {
+            color: #cbd5e1;
+        }
 
-    body.dark-mode .subtitle,
-    body.dark-mode .footer {
-      color: #cbd5e1;
-    }
+        body.dark .progress-track {
+            background: #475569;
+        }
 
-    body.dark-mode input[type="text"] {
-      background: #334155;
-      color: white;
-      border-color: #475569;
-    }
+        @media (max-width: 450px) {
+            body {
+                padding: 10px;
+            }
 
-    body.dark-mode .progress-container {
-      background: #334155;
-    }
+            .container {
+                padding: 15px;
+                margin-top: 15px;
+            }
 
-    body.dark-mode .progress-bar {
-      background: #475569;
-    }
-
-    body.dark-mode .task-item {
-      background: #334155;
-      border-color: #475569;
-    }
-
-    body.dark-mode .task-item.completed span,
-    body.dark-mode .empty-message {
-      color: #cbd5e1;
-    }
-
-    body.dark-mode .delete-btn {
-      background: #7f1d1d;
-      color: #fecaca;
-    }
-
-    body.dark-mode .edit-btn {
-      background: #854d0e;
-      color: #fef3c7;
-    }
-
-    body.dark-mode .theme-btn {
-      background: #facc15;
-      color: #1e293b;
-    }
-
-    @media (max-width: 420px) {
-      body {
-        padding: 10px;
-      }
-
-      .container {
-        margin: 10px auto;
-        padding: 16px;
-      }
-
-      .task-item {
-        flex-wrap: wrap;
-      }
-    }
-  </style>
+            h1 {
+                font-size: 23px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <div class="container">
+    <div class="container">
 
-    <div class="top-bar">
-      <button type="button" id="themeToggle" class="theme-btn">
-        🌙 Dark Mode
-      </button>
+        <div class="top-buttons">
+            <button class="theme-btn" id="themeButton" type="button">
+                🌙 Dark Mode
+            </button>
+        </div>
+
+        <h1>🎓 Student Task Manager</h1>
+        <p class="subtitle">Manage your daily study tasks easily!</p>
+
+        <form id="taskForm">
+            <input
+                type="text"
+                id="taskInput"
+                placeholder="Enter your study task..."
+                maxlength="200"
+                required
+            >
+
+            <button class="add-btn" id="submitButton" type="submit">
+                + Add Task
+            </button>
+
+            <button
+                id="cancelButton"
+                type="button"
+                style="display:none; width:100%; background:#64748b; color:white;"
+            >
+                Cancel Edit
+            </button>
+        </form>
+
+        <div class="progress-box">
+            <strong>Study Progress: <span id="progressText">0%</span></strong>
+            <div class="progress-track">
+                <div id="progressBar"></div>
+            </div>
+            <p id="taskCount">0 tasks</p>
+        </div>
+
+        <ul id="taskList"></ul>
+        <p id="message">No tasks yet. Add your first task!</p>
     </div>
 
-    <h1>🎯 Student Task Manager</h1>
-    <p class="subtitle">Plan your day. Complete your goals!</p>
+    <script>
+        const taskForm = document.getElementById("taskForm");
+        const taskInput = document.getElementById("taskInput");
+        const submitButton = document.getElementById("submitButton");
+        const cancelButton = document.getElementById("cancelButton");
+        const taskList = document.getElementById("taskList");
+        const message = document.getElementById("message");
+        const progressBar = document.getElementById("progressBar");
+        const progressText = document.getElementById("progressText");
+        const taskCount = document.getElementById("taskCount");
+        const themeButton = document.getElementById("themeButton");
 
-    <form class="task-input" id="taskForm">
-      <input
-        type="text"
-        id="taskInput"
-        placeholder="Enter a new task..."
-        maxlength="200"
-        required
-      >
-      <button type="submit" class="add-btn" id="submitBtn">
-        + Add
-      </button>
-    </form>
+        let tasks = [];
+        let editingId = null;
 
-    <div class="progress-container">
-      <div class="progress-info">
-        <span>📊 Your Progress</span>
-        <strong id="progressText">0%</strong>
-      </div>
+        try {
+            const savedTasks = JSON.parse(
+                localStorage.getItem("studentTasks")
+            );
 
-      <div
-        class="progress-bar"
-        role="progressbar"
-        aria-label="Tasks completed"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow="0"
-      >
-        <div id="progressFill"></div>
-      </div>
-
-      <p id="taskCount">0 of 0 tasks completed</p>
-    </div>
-
-    <ul id="taskList"></ul>
-
-    <p class="footer">Made with ❤️ for students</p>
-  </div>
-
-  <script>
-    const taskForm = document.getElementById("taskForm");
-    const taskInput = document.getElementById("taskInput");
-    const taskList = document.getElementById("taskList");
-    const submitBtn = document.getElementById("submitBtn");
-    const progressText = document.getElementById("progressText");
-    const progressFill = document.getElementById("progressFill");
-    const taskCount = document.getElementById("taskCount");
-    const progressBar = document.querySelector(".progress-bar");
-    const themeToggle = document.getElementById("themeToggle");
-
-    let tasks = [];
-    let editingIndex = null;
-
-    try {
-      const savedTasks = localStorage.getItem("studentTasks");
-      const parsedTasks = savedTasks ? JSON.parse(savedTasks) : [];
-
-      if (
-        Array.isArray(parsedTasks) &&
-        parsedTasks.every(task =>
-          task &&
-          typeof task.text === "string" &&
-          typeof task.completed === "boolean"
-        )
-      ) {
-        tasks = parsedTasks;
-      }
-    } catch (error) {
-      tasks = [];
-    }
-
-    function saveTasks() {
-      try {
-        localStorage.setItem(
-          "studentTasks",
-          JSON.stringify(tasks)
-        );
-      } catch (error) {
-        alert("Tasks could not be saved on this device.");
-      }
-    }
-
-    function updateProgress() {
-      const total = tasks.length;
-      const completed = tasks.filter(
-        task => task.completed
-      ).length;
-
-      const percentage = total === 0
-        ? 0
-        : Math.round((completed / total) * 100);
-
-      progressText.textContent = percentage + "%";
-      progressFill.style.width = percentage + "%";
-      progressBar.setAttribute("aria-valuenow", percentage);
-
-      taskCount.textContent =
-        completed + " of " + total + " tasks completed";
-    }
-
-    function cancelEdit() {
-      editingIndex = null;
-      taskInput.value = "";
-      submitBtn.textContent = "+ Add";
-    }
-
-    function renderTasks() {
-      taskList.replaceChildren();
-
-      if (tasks.length === 0) {
-        const message = document.createElement("li");
-        message.className = "empty-message";
-        message.textContent =
-          "No tasks yet. Add your first task! 😊";
-        taskList.appendChild(message);
-      }
-
-      tasks.forEach((task, index) => {
-        const item = document.createElement("li");
-        item.className = "task-item";
-
-        if (task.completed) {
-          item.classList.add("completed");
+            if (Array.isArray(savedTasks)) {
+                tasks = savedTasks.filter(
+                    task => task &&
+                    typeof task.text === "string"
+                ).map((task, index) => ({
+                    id: task.id ?? Date.now() + index,
+                    text: task.text,
+                    completed: Boolean(task.completed)
+                }));
+            }
+        } catch (error) {
+            tasks = [];
         }
 
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = task.completed;
-        checkbox.setAttribute(
-          "aria-label",
-          "Mark task complete"
-        );
+        if (localStorage.getItem("studentTheme") === "dark") {
+            document.body.classList.add("dark");
+            themeButton.textContent = "☀️ Light Mode";
+        }
 
-        checkbox.addEventListener("change", function () {
-          tasks[index].completed = checkbox.checked;
-          saveTasks();
-          renderTasks();
+        function saveTasks() {
+            localStorage.setItem("studentTasks", JSON.stringify(tasks));
+        }
+
+        function renderTasks() {
+            taskList.innerHTML = "";
+
+            tasks.forEach(function(task) {
+                const li = document.createElement("li");
+                li.className = "task";
+
+                if (task.completed) {
+                    li.classList.add("completed");
+                }
+
+                const checkbox = document.createElement("input");
+                checkbox.type = "checkbox";
+                checkbox.checked = task.completed;
+                checkbox.setAttribute("aria-label", "Complete task");
+
+                checkbox.addEventListener("change", function() {
+                    task.completed = checkbox.checked;
+                    saveTasks();
+                    renderTasks();
+                });
+
+                const span = document.createElement("span");
+                span.className = "task-text";
+                span.textContent = task.text;
+
+                const editButton = document.createElement("button");
+                editButton.type = "button";
+                editButton.className = "edit-btn";
+                editButton.textContent = "✏️ Edit";
+
+                editButton.addEventListener("click", function() {
+                    editingId = task.id;
+                    taskInput.value = task.text;
+                    submitButton.textContent = "Update Task";
+                    cancelButton.style.display = "block";
+                    taskInput.focus();
+                });
+
+                const deleteButton = document.createElement("button");
+                deleteButton.type = "button";
+                deleteButton.className = "delete-btn";
+                deleteButton.textContent = "🗑️ Delete";
+
+                deleteButton.addEventListener("click", function() {
+                    tasks = tasks.filter(item => item.id !== task.id);
+
+                    if (editingId === task.id) {
+                        cancelEdit();
+                    }
+
+                    saveTasks();
+                    renderTasks();
+                });
+
+                li.appendChild(checkbox);
+                li.appendChild(span);
+                li.appendChild(editButton);
+                li.appendChild(deleteButton);
+
+                taskList.appendChild(li);
+            });
+
+            const completed = tasks.filter(
+                task => task.completed
+            ).length;
+
+            const percentage = tasks.length
+                ? Math.round((completed / tasks.length) * 100)
+                : 0;
+
+            progressBar.style.width = percentage + "%";
+            progressText.textContent = percentage + "%";
+            taskCount.textContent =
+                completed + " completed out of " + tasks.length + " tasks";
+
+            message.style.display = tasks.length ? "none" : "block";
+        }
+
+        function cancelEdit() {
+            editingId = null;
+            taskInput.value = "";
+            submitButton.textContent = "+ Add Task";
+            cancelButton.style.display = "none";
+        }
+
+        taskForm.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const text = taskInput.value.trim();
+
+            if (!text) {
+                return;
+            }
+
+            if (editingId !== null) {
+                const task = tasks.find(
+                    item => item.id === editingId
+                );
+
+                if (task) {
+                    task.text = text;
+                }
+
+                cancelEdit();
+            } else {
+                tasks.push({
+                    id: Date.now(),
+                    text: text,
+                    completed: false
+                });
+
+                taskInput.value = "";
+            }
+
+            saveTasks();
+            renderTasks();
         });
 
-        const text = document.createElement("span");
-        text.textContent = task.text;
+        cancelButton.addEventListener("click", cancelEdit);
 
-        const editButton = document.createElement("button");
-        editButton.type = "button";
-        editButton.className = "edit-btn";
-        editButton.textContent = "✏️ Edit";
+        themeButton.addEventListener("click", function() {
+            document.body.classList.toggle("dark");
 
-        editButton.addEventListener("click", function () {
-          editingIndex = index;
-          taskInput.value = tasks[index].text;
-          submitBtn.textContent = "💾 Update";
-          taskInput.focus();
+            const isDark = document.body.classList.contains("dark");
+
+            themeButton.textContent = isDark
+                ? "☀️ Light Mode"
+                : "🌙 Dark Mode";
+
+            localStorage.setItem(
+                "studentTheme",
+                isDark ? "dark" : "light"
+            );
         });
 
-        const deleteButton = document.createElement("button");
-        deleteButton.type = "button";
-        deleteButton.className = "delete-btn";
-        deleteButton.textContent = "Delete";
-
-        deleteButton.addEventListener("click", function () {
-          tasks.splice(index, 1);
-
-          if (editingIndex === index) {
-            cancelEdit();
-          } else if (
-            editingIndex !== null &&
-            editingIndex > index
-          ) {
-            editingIndex--;
-          }
-
-          saveTasks();
-          renderTasks();
-        });
-
-        item.append(
-          checkbox,
-          text,
-          editButton,
-          deleteButton
-        );
-
-        taskList.appendChild(item);
-      });
-
-      updateProgress();
-    }
-
-    taskForm.addEventListener("submit", function (event) {
-      event.preventDefault();
-
-      const text = taskInput.value.trim();
-
-      if (!text) {
-        return;
-      }
-
-      if (editingIndex !== null) {
-        tasks[editingIndex].text = text;
-        cancelEdit();
-      } else {
-        tasks.push({
-          text: text,
-          completed: false
-        });
-
-        taskInput.value = "";
-      }
-
-      saveTasks();
-      renderTasks();
-    });
-
-    taskInput.addEventListener("input", function () {
-      if (
-        editingIndex !== null &&
-        taskInput.value.trim() === ""
-      ) {
-        submitBtn.textContent = "💾 Update";
-      }
-    });
-
-    function applyTheme(isDark) {
-      document.body.classList.toggle("dark-mode", isDark);
-
-      themeToggle.textContent = isDark
-        ? "☀️ Light Mode"
-        : "🌙 Dark Mode";
-
-      themeToggle.setAttribute(
-        "aria-pressed",
-        String(isDark)
-      );
-    }
-
-    let isDark = false;
-
-    try {
-      isDark = localStorage.getItem("studentTheme") === "dark";
-    } catch (error) {
-      isDark = false;
-    }
-
-    applyTheme(isDark);
-
-    themeToggle.addEventListener("click", function () {
-      isDark = !document.body.classList.contains("dark-mode");
-      applyTheme(isDark);
-
-      try {
-        localStorage.setItem(
-          "studentTheme",
-          isDark ? "dark" : "light"
-        );
-      } catch (error) {
-        // Theme still works until refresh.
-      }
-    });
-
-    renderTasks();
-  </script>
+        renderTasks();
+    </script>
 </body>
 </html>
