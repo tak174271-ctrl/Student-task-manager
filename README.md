@@ -1,10 +1,6 @@
-# Student Task Manager
+# 📚 Student Task Manager
 
 A simple and responsive web application to manage daily study tasks.
-
-## 🌐 Live Website
-
-[Click here to open Student Task Manager](https://tak174271-ctrl.github.io/Student-task-manager/)
 
 ## ✨ Features
 
@@ -12,43 +8,49 @@ A simple and responsive web application to manage daily study tasks.
 - Edit existing tasks
 - Delete tasks
 - Mark tasks as completed
-- View study progress with a progress bar
-- Dark Mode and Light Mode
-- Save tasks using browser localStorage
-- Mobile-friendly responsive design
+- Simple and user-friendly interface
+- Responsive design
 
 ## 🛠️ Technologies Used
 
-- HTML5
-- CSS3
+- HTML
+- CSS
 - JavaScript
-- GitHub Pages
 
-## 📖 How to Use
+## 📸 Website Screenshot
 
-1. Open the live website using the link above.
-2. Enter a task in the input box.
-3. Click the Add Task button.
-4. Use Edit to update a task.
-5. Use Delete to remove a task.
-6. Tick the checkbox to mark a task as completed.
-7. Track your progress using the progress bar.
-8. Switch between Dark Mode and Light Mode.
+![Student Task Manager Screenshot](screenshot.png)
 
-## 💾 Data Storage
+## 🌐 Live Demo
 
-Tasks and theme preferences are saved in the browser's localStorage.
+[Click here to visit Student Task Manager](https://tak174271-ctrl.github.io/Student-task-manager/)
 
-Note: Data is stored in the browser used to access the website.
+## 📂 Project Structure
+
+```text
+Student-task-manager/
+├── index.html
+├── style.css
+├── script.js
+├── README.md
+└── screenshot.png
+```
 
 ## 🎯 Project Objective
 
-The objective of this project is to help students organize their daily study tasks and track their progress.
+The main objective of this project is to help students manage their daily study tasks efficiently and improve productivity.
 
-## 👨‍💻 Author
+## 👨‍💻 Developer
 
 BCA Student
 
-## 📌 Project Status
+## 📌 Future Improvements
 
-Basic Features Implemented
+- Add task deadlines
+- Add task priority
+- Save tasks using Local Storage
+- Add a search feature
+
+---
+
+⭐ If you like this project, feel free to explore it!
