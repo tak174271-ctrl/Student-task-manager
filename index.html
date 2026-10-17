@@ -26,7 +26,6 @@
       background: white;
       border-radius: 16px;
       box-shadow: 0 5px 20px #00000012;
-      transition: background 0.3s;
     }
 
     h1 {
@@ -47,7 +46,7 @@
 
     button {
       border: none;
-      padding: 11px 14px;
+      padding: 10px 12px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 14px;
@@ -90,9 +89,7 @@
     .progress-info {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
       margin-bottom: 10px;
-      font-size: 14px;
     }
 
     .progress-bar {
@@ -119,7 +116,7 @@
     .task-item {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       padding: 12px;
       margin-bottom: 10px;
       background: #f8fafc;
@@ -129,12 +126,18 @@
 
     .task-item span {
       flex: 1;
+      min-width: 0;
       overflow-wrap: anywhere;
     }
 
     .task-item.completed span {
       text-decoration: line-through;
       color: #64748b;
+    }
+
+    .edit-btn {
+      background: #fef3c7;
+      color: #92400e;
     }
 
     .delete-btn {
@@ -155,7 +158,6 @@
       margin-top: 25px;
     }
 
-    /* Dark Mode */
     body.dark-mode {
       background: #0f172a;
       color: #f1f5f9;
@@ -193,7 +195,8 @@
       border-color: #475569;
     }
 
-    body.dark-mode .task-item.completed span {
+    body.dark-mode .task-item.completed span,
+    body.dark-mode .empty-message {
       color: #cbd5e1;
     }
 
@@ -202,8 +205,9 @@
       color: #fecaca;
     }
 
-    body.dark-mode .empty-message {
-      color: #cbd5e1;
+    body.dark-mode .edit-btn {
+      background: #854d0e;
+      color: #fef3c7;
     }
 
     body.dark-mode .theme-btn {
@@ -211,7 +215,7 @@
       color: #1e293b;
     }
 
-    @media (max-width: 400px) {
+    @media (max-width: 420px) {
       body {
         padding: 10px;
       }
@@ -221,12 +225,8 @@
         padding: 16px;
       }
 
-      .task-input {
+      .task-item {
         flex-wrap: wrap;
-      }
-
-      .task-input input {
-        width: 100%;
       }
     }
   </style>
@@ -252,7 +252,9 @@
         maxlength="200"
         required
       >
-      <button type="submit" class="add-btn">+ Add</button>
+      <button type="submit" class="add-btn" id="submitBtn">
+        + Add
+      </button>
     </form>
 
     <div class="progress-container">
@@ -284,6 +286,7 @@
     const taskForm = document.getElementById("taskForm");
     const taskInput = document.getElementById("taskInput");
     const taskList = document.getElementById("taskList");
+    const submitBtn = document.getElementById("submitBtn");
     const progressText = document.getElementById("progressText");
     const progressFill = document.getElementById("progressFill");
     const taskCount = document.getElementById("taskCount");
@@ -291,20 +294,21 @@
     const themeToggle = document.getElementById("themeToggle");
 
     let tasks = [];
+    let editingIndex = null;
 
     try {
       const savedTasks = localStorage.getItem("studentTasks");
-      tasks = savedTasks ? JSON.parse(savedTasks) : [];
+      const parsedTasks = savedTasks ? JSON.parse(savedTasks) : [];
 
       if (
-        !Array.isArray(tasks) ||
-        !tasks.every(task =>
+        Array.isArray(parsedTasks) &&
+        parsedTasks.every(task =>
           task &&
           typeof task.text === "string" &&
           typeof task.completed === "boolean"
         )
       ) {
-        tasks = [];
+        tasks = parsedTasks;
       }
     } catch (error) {
       tasks = [];
@@ -337,6 +341,12 @@
 
       taskCount.textContent =
         completed + " of " + total + " tasks completed";
+    }
+
+    function cancelEdit() {
+      editingIndex = null;
+      taskInput.value = "";
+      submitBtn.textContent = "+ Add";
     }
 
     function renderTasks() {
@@ -375,18 +385,46 @@
         const text = document.createElement("span");
         text.textContent = task.text;
 
+        const editButton = document.createElement("button");
+        editButton.type = "button";
+        editButton.className = "edit-btn";
+        editButton.textContent = "✏️ Edit";
+
+        editButton.addEventListener("click", function () {
+          editingIndex = index;
+          taskInput.value = tasks[index].text;
+          submitBtn.textContent = "💾 Update";
+          taskInput.focus();
+        });
+
         const deleteButton = document.createElement("button");
+        deleteButton.type = "button";
         deleteButton.className = "delete-btn";
         deleteButton.textContent = "Delete";
-        deleteButton.setAttribute("aria-label", "Delete task");
 
         deleteButton.addEventListener("click", function () {
           tasks.splice(index, 1);
+
+          if (editingIndex === index) {
+            cancelEdit();
+          } else if (
+            editingIndex !== null &&
+            editingIndex > index
+          ) {
+            editingIndex--;
+          }
+
           saveTasks();
           renderTasks();
         });
 
-        item.append(checkbox, text, deleteButton);
+        item.append(
+          checkbox,
+          text,
+          editButton,
+          deleteButton
+        );
+
         taskList.appendChild(item);
       });
 
@@ -402,15 +440,29 @@
         return;
       }
 
-      tasks.push({
-        text: text,
-        completed: false
-      });
+      if (editingIndex !== null) {
+        tasks[editingIndex].text = text;
+        cancelEdit();
+      } else {
+        tasks.push({
+          text: text,
+          completed: false
+        });
+
+        taskInput.value = "";
+      }
 
       saveTasks();
-      taskInput.value = "";
       renderTasks();
-      taskInput.focus();
+    });
+
+    taskInput.addEventListener("input", function () {
+      if (
+        editingIndex !== null &&
+        taskInput.value.trim() === ""
+      ) {
+        submitBtn.textContent = "💾 Update";
+      }
     });
 
     function applyTheme(isDark) {
@@ -446,7 +498,7 @@
           isDark ? "dark" : "light"
         );
       } catch (error) {
-        // Theme still works until the page is refreshed.
+        // Theme still works until refresh.
       }
     });
 
